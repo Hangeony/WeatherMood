@@ -9,10 +9,10 @@ export const registerSchema = z
       .email({ message: '올바른 이메일 형식이어야 합니다.' }),
     password: z
       .string()
-      .min(1, { message: '비밀번호는 1자 이상이여야 합니다.' }),
+      .min(1, { message: '비밀번호는 최소 6자 이상이어야 합니다.' }),
     confirm_password: z
       .string()
-      .min(1, { message: '비밀번호 확인을 입력해야 합니다.' }),
+      .min(1, { message: '비밀번호는 최소 6자 이상이어야 합니다.' }),
     cityName: z.string().min(1, { message: '도시명을 입력해야 합니다.' }),
   })
   .refine(data => data.password === data.confirm_password, {

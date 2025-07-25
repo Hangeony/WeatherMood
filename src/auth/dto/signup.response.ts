@@ -10,6 +10,12 @@ export class SignupResponseDto {
   @ApiProperty({ example: '건희' })
   nickName: string;
 
+  @ApiProperty({ example: '123456' })
+  password: string;
+
+  @ApiProperty({ example: '123456' })
+  confirm_password: string;
+
   @ApiProperty({ example: 'Seoul' })
   cityName: string;
 

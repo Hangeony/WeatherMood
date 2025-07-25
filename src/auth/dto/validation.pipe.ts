@@ -11,7 +11,7 @@ export class ZodValidationPipe implements PipeTransform {
     if (!result.success) {
       const formattedErrors = result.error.issues.reduce(
         (acc, issue) => {
-          const key = String(issue.path[0]); // ✅ 해결
+          const key = String(issue.path[0]); 
           acc[key] = issue.message;
           return acc;
         },

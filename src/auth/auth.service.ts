@@ -1,10 +1,8 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../prisma/client';
 import axios from 'axios';
 import * as bcrypt from 'bcrypt';
-
-const prisma = new PrismaClient();
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -31,11 +29,11 @@ export class AuthService {
       });
     }
 
-    // Supabase에 회원가입
-    const { data, error } = await supabase.auth.signUp({ email, password });
-    if (error || !data.user) {
-      throw new BadRequestException(error?.message ?? '회원가입 실패');
-    }
+    // // Supabase에 회원가입
+    // const { data, error } = await supabase.auth.signUp({ email, password });
+    // if (error || !data.user) {
+    //   throw new BadRequestException(error?.message ?? '회원가입 실패');
+    // }
 
     // 도시명 → 위도/경도 조회
     const geoRes = await axios.get(
@@ -59,7 +57,7 @@ export class AuthService {
     await prisma.user.create({
       data: {
         email,
-        nickName: nickName,
+        nickName,
         cityName,
         latitude: geo.lat,
         longitude: geo.lon,
