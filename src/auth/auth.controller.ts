@@ -12,6 +12,7 @@ export class AuthController {
   @SwaggerSignup.operation
   @SwaggerSignup.response201
   @SwaggerSignup.response422
+  @SwaggerSignup.response500
   @UsePipes(new ZodValidationPipe(registerSchema))
   async signUp(@Body() body: RegisterDto) {
     return this.authService.signUp(body);

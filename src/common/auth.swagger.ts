@@ -12,4 +12,8 @@ export const SwaggerSignup = {
     status: 422,
     description: '유효성 검사 실패',
   }),
+    response500: ApiResponse({
+    status: 500,
+    description: '서버 에러',
+  }),
 };
