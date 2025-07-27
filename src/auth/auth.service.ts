@@ -13,7 +13,7 @@ const supabase = createClient(
 
 @Injectable()
 export class AuthService {
-  async signUp(body: {
+  async register(body: {
     email: string;
     password: string;
     nickName: string;
