@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UsePipes } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, Patch } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodValidationPipe } from './dto/validation.pipe';
 import { registerSchema, RegisterDto } from './dto/register.dto';
@@ -28,5 +28,10 @@ export class AuthController {
   @UsePipes(new ZodValidationPipe(loginSchema))
   login(@Body() body: LoginDto) {
     return this.authService.login(body);
+  }
+
+  @Patch('logout')
+  async logout(@Body() body: { userId: number }) {
+    return this.authService.logout(body.userId);
   }
 }

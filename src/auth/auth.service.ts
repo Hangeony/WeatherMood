@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
 import { prisma } from '../../prisma/client';
+import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import axios from 'axios';
 import * as bcrypt from 'bcrypt';
@@ -13,13 +14,8 @@ const supabase = createClient(
 
 @Injectable()
 export class AuthService {
-  async register(body: {
-    email: string;
-    password: string;
-    nickName: string;
-    cityName: string;
-  }) {
-    const { email, password, nickName, cityName } = body;
+  async register(payload: RegisterDto) {
+    const { email, password, nickName, cityName } = payload;
 
     // 중복 이메일 검사
     const existingUser = await prisma.user.findUnique({
@@ -129,5 +125,24 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async logout(userId: number) {
+    const account = await prisma.account.findUnique({
+      where: { userId },
+    });
+
+    if (!account) {
+      throw new BadRequestException('해당 계정이 존재하지 않습니다.');
+    }
+
+    await prisma.account.update({
+      where: { id: account.id },
+      data: {
+        refresh_token: null,
+      },
+    });
+
+    return { message: '로그아웃 완료' };
   }
 }
