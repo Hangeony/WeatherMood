@@ -18,10 +18,4 @@ export class SignupResponseDto {
 
   @ApiProperty({ example: 'Seoul' })
   cityName: string;
-
-  @ApiProperty({ example: 37.5665, description: '위도' })
-  latitude: number;
-
-  @ApiProperty({ example: 126.978, description: '경도' })
-  longitude: number;
 }
