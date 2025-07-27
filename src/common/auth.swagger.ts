@@ -1,12 +1,12 @@
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { SignupResponseDto } from '../auth/dto/signup.response';
+import { RegisterResponseDto } from '../auth/dto/register.response';
 
-export const SwaggerSignup = {
+export const SwaggerRegister = {
   operation: ApiOperation({ summary: '회원가입' }),
   response201: ApiResponse({
     status: 201,
     description: '회원가입 성공',
-    type: SignupResponseDto,
+    type: RegisterResponseDto,
   }),
   response422: ApiResponse({
     status: 422,
