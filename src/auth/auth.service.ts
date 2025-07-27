@@ -1,8 +1,10 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
 import { prisma } from '../../prisma/client';
+import { LoginDto } from './dto/login.dto';
 import axios from 'axios';
 import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
@@ -70,5 +72,62 @@ export class AuthService {
     });
 
     return { message: '회원가입 성공' };
+  }
+
+  async login(payload: LoginDto) {
+    const { email, password } = payload;
+
+    // 1. 사용자 찾기
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { account: true },
+    });
+
+    if (!user || !user.account?.password_hash) {
+      throw new BadRequestException({
+        errors: {
+          email: '이메일 또는 비밀번호가 올바르지 않습니다.',
+        },
+      });
+    }
+
+    // 2. 비밀번호 비교
+    const isMatch = await bcrypt.compare(password, user.account.password_hash);
+    if (!isMatch) {
+      throw new BadRequestException({
+        errors: {
+          email: '이메일 또는 비밀번호가 올바르지 않습니다.',
+        },
+      });
+    }
+
+    // 3. JWT 토큰 생성
+    const JWTPayload = {
+      id: user.id,
+      email: user.email,
+      nickName: user.nickName,
+    };
+
+    const accessToken = jwt.sign(JWTPayload, process.env.JWT_SECRET!, {
+      expiresIn: '15m',
+    });
+
+    const refreshToken = jwt.sign(JWTPayload, process.env.JWT_SECRET!, {
+      expiresIn: '30d',
+    });
+
+    // 4. refresh_token 업데이트
+    await prisma.account.update({
+      where: { userId: user.id },
+      data: { refresh_token: refreshToken },
+    });
+
+    return {
+      id: user.id,
+      email: user.email,
+      nickName: user.nickName,
+      accessToken,
+      refreshToken,
+    };
   }
 }

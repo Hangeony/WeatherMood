@@ -4,6 +4,7 @@ import { ZodValidationPipe } from './dto/validation.pipe';
 import { registerSchema, RegisterDto } from './dto/register.dto';
 import { loginSchema, LoginDto } from './dto/login.dto';
 import { SwaggerRegister } from 'src/common/auth.swagger';
+import { SwaggerLogin } from 'src/common/login.swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -20,6 +21,10 @@ export class AuthController {
   }
 
   @Post('login')
+  @SwaggerLogin.operation
+  @SwaggerLogin.response200
+  @SwaggerLogin.response400
+  @SwaggerLogin.response500
   @UsePipes(new ZodValidationPipe(loginSchema))
   login(@Body() body: LoginDto) {
     return this.authService.login(body);
