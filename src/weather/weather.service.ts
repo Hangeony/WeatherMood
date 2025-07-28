@@ -38,14 +38,17 @@ export class WeatherService {
     );
 
     return {
-      city: user.cityName,
       date,
-      location: user.cityName,
-      weather: res.data.weather[0].main,
-      description: res.data.weather[0].description,
-      temp: res.data.main.temp,
-      feels_like: res.data.main.feels_like,
-      icon: `https://openweathermap.org/img/wn/${res.data.weather[0].icon}.png`,
+      location: {
+        location: user.cityName,
+      },
+      weather: {
+        temperature: res.data.main.temp,
+        feels_like: res.data.main.feels_like,
+        main: res.data.weather[0].main,
+        description: res.data.weather[0].description,
+        icon: `https://openweathermap.org/img/wn/${res.data.weather[0].icon}.png`,
+      },
     };
   }
 }
