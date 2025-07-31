@@ -33,7 +33,7 @@ export class WeatherService {
 
     const searchLocation = location.local_names?.ko ?? location.name;
 
-    return searchLocation;
+    return { cityName: searchLocation };
   }
 
   async getWeather(userId: number, date: string) {
