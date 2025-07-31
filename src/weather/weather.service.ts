@@ -10,7 +10,7 @@ import axios from 'axios';
 
 @Injectable()
 export class WeatherService {
-   constructor(private readonly http: HttpService) {}
+  constructor(private readonly http: HttpService) {}
 
   async searchLocation(cityName: string) {
     const response = await firstValueFrom(
@@ -20,15 +20,20 @@ export class WeatherService {
           limit: 1,
           appid: process.env.OPENWEATHER_API_KEY,
         },
-      }),
+      })
     );
 
     const data = response.data;
+
     if (!data || data.length === 0) {
       throw new BadRequestException('도시를 찾을 수 없습니다.');
     }
 
-    return data[0]; // { lat, lon, name, ... }
+    const location = data[0];
+
+    const searchLocation = location.local_names?.ko ?? location.name;
+
+    return searchLocation;
   }
 
   async getWeather(userId: number, date: string) {
