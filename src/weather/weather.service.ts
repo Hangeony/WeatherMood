@@ -17,7 +17,7 @@ export class WeatherService {
       this.http.get('https://api.openweathermap.org/geo/1.0/direct', {
         params: {
           q: cityName,
-          limit: 1,
+          limit: 10, // 원하는 개수만큼 연관 검색 결과
           appid: process.env.OPENWEATHER_API_KEY,
         },
       })
@@ -25,15 +25,13 @@ export class WeatherService {
 
     const data = response.data;
 
-    if (!data || data.length === 0) {
-      throw new BadRequestException('도시를 찾을 수 없습니다.');
+    if (!data) {
+      throw new BadRequestException('해당 도시를 찾을 수 없습니다.');
     }
 
-    const location = data[0];
-
-    const searchLocation = location.local_names?.ko ?? location.name;
-
-    return { cityName: searchLocation };
+    console.log('✅ 원본 응답 (OpenWeather Geo API):', data);
+    console.log('[OpenWeather 응답]', JSON.stringify(data, null, 2));
+    return data;
   }
 
   async getWeather(userId: number, date: string) {
