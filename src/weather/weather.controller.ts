@@ -5,11 +5,16 @@ import { User } from '../../src/common/decorator/user.decorator';
 import { SwaggerGetWeatherToday } from 'src/common/weather.swagger';
 
 @Controller('weather')
-@UseGuards(AuthGuard)
 export class WeatherController {
   constructor(private readonly weatherService: WeatherService) {}
 
+  @Get('search')
+  async searchLocation(@Query('q') cityName: string) {
+    return this.weatherService.searchLocation(cityName);
+  }
+
   @Get('today')
+  @UseGuards(AuthGuard)
   @SwaggerGetWeatherToday.operation
   @SwaggerGetWeatherToday.response200
   @SwaggerGetWeatherToday.response400
@@ -21,6 +26,7 @@ export class WeatherController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
   async getWeatherByDate(
     @User('id') userId: number,
     @Query('date') date: string

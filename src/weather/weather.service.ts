@@ -4,10 +4,33 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { prisma } from '../../prisma/client';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs'; // ✅ RxJS observable → promise로 변환
 import axios from 'axios';
 
 @Injectable()
 export class WeatherService {
+   constructor(private readonly http: HttpService) {}
+
+  async searchLocation(cityName: string) {
+    const response = await firstValueFrom(
+      this.http.get('https://api.openweathermap.org/geo/1.0/direct', {
+        params: {
+          q: cityName,
+          limit: 1,
+          appid: process.env.OPENWEATHER_API_KEY,
+        },
+      }),
+    );
+
+    const data = response.data;
+    if (!data || data.length === 0) {
+      throw new BadRequestException('도시를 찾을 수 없습니다.');
+    }
+
+    return data[0]; // { lat, lon, name, ... }
+  }
+
   async getWeather(userId: number, date: string) {
     const user = await prisma.user.findUnique({
       where: { id: userId },
