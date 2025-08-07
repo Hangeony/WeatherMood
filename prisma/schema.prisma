@@ -15,6 +15,7 @@ model User {
   latitude  Float? // 위도
   longitude Float? // 경도
   account   Account?
+  memo      Memos[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -27,4 +28,30 @@ model Account {
   userId        Int      @unique
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+}
+
+model Feelings {
+  id   Int     @id @default(autoincrement())
+  name String  @unique
+  memo Memos[]
+}
+
+model Memos {
+  id          Int       @id @default(autoincrement())
+  cityName    String
+  temperature Float
+  feelsLike   Float
+  main        String
+  description String
+  icon        String
+  date        String
+  memo        String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      Int?
+  feelingId   Int?
+  User        User?     @relation(fields: [userId], references: [id])
+  Feeling     Feelings? @relation(fields: [feelingId], references: [id])
+
+  @@unique([userId, date])
 }

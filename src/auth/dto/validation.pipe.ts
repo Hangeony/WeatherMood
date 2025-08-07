@@ -6,12 +6,13 @@ export class ZodValidationPipe implements PipeTransform {
   constructor(private schema: ZodSchema<any>) {}
 
   transform(value: any) {
+    console.log('📦 Received in Zod Pipe:', value);
     const result = this.schema.safeParse(value);
 
     if (!result.success) {
       const formattedErrors = result.error.issues.reduce(
         (acc, issue) => {
-          const key = String(issue.path[0]); 
+          const key = String(issue.path[0]);
           acc[key] = issue.message;
           return acc;
         },
