@@ -16,5 +16,6 @@ async function bootstrap() {
   });
 
   await app.listen(3000);
+  console.log('서버 실행중 ~ 😀')
 }
 bootstrap();
