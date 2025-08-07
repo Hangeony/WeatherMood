@@ -92,6 +92,7 @@ export class RecordService {
         main: m.main,
         description: m.description,
         icon: m.icon,
+        cityName: m.cityName,
       })),
     };
   }
