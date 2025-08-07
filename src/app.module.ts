@@ -6,9 +6,10 @@ import { WeatherModule } from './weather/weather.module';
 import { ProfileModule } from './profile/profile.module';
 import { MemoModule } from './memo/memo.module';
 import { RecordModule } from './record/record.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
-  imports: [AuthModule, WeatherModule, ProfileModule, MemoModule, RecordModule],
+  imports: [AuthModule, WeatherModule, ProfileModule, MemoModule, RecordModule, HealthModule],
   controllers: [AppController],
   providers: [AppService],
 })
