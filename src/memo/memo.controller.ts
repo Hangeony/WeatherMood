@@ -35,7 +35,7 @@ export class MemoController {
     return this.memoService.getOne(userId, id);
   }
 
-  @Get('/by-date/:date')
+  @Get('/:date')
   getOneByDate(@User('id') userId: number, @Param('date') date: string) {
     return this.memoService.getOneByDate(userId, date);
   }
