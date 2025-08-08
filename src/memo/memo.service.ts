@@ -35,12 +35,14 @@ export class MemoService {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
       throw new BadRequestException('날짜 형식은 YYYY-MM-DD');
     }
-    const memo = await prisma.memos.findUnique({
-      where: { userId_date: { userId, date } },
+
+    const memos = await prisma.memos.findMany({
+      where: { userId, date },
       include: { Feeling: true },
     });
-    if (!memo) throw new NotFoundException(`${date} 메모 없음`);
-    return memo;
+
+    // 무조건 배열 반환 (없으면 [])
+    return memos;
   }
 
   async create(userId: number, dto: CreateMemoDto) {
