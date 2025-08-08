@@ -87,6 +87,8 @@ export class RecordService {
         ),
         memo: m.memo,
         feeling: m.Feeling?.name || 'unknown',
+        feelingId: m.feelingId,
+        createdAt: m.createdAt,
         temperature: m.temperature,
         feelsLike: m.feelsLike,
         main: m.main,
