@@ -138,9 +138,7 @@ export class AuthService {
 
     await prisma.account.update({
       where: { id: account.id },
-      data: {
-        refresh_token: null,
-      },
+      data: { refresh_token: null },
     });
 
     return { message: '로그아웃 완료' };

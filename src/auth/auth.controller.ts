@@ -1,4 +1,11 @@
-import { Controller, Post, Body, UsePipes, Patch, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UsePipes,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodValidationPipe } from './dto/validation.pipe';
 import { registerSchema, RegisterDto } from './dto/register.dto';
@@ -6,6 +13,7 @@ import { loginSchema, LoginDto } from './dto/login.dto';
 import { SwaggerRegister } from 'src/common/auth.swagger';
 import { SwaggerLogin } from 'src/common/login.swagger';
 import { AuthGuard } from './auth.guard';
+import { User } from '../common/decorator/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -30,10 +38,9 @@ export class AuthController {
   login(@Body() body: LoginDto) {
     return this.authService.login(body);
   }
-
   @Post('logout')
   @UseGuards(AuthGuard)
-  async logout(@Body() body: { userId: number }) {
-    return this.authService.logout(body.userId);
+  async logout(@User('id') userId: number) {
+    return this.authService.logout(userId);
   }
 }
