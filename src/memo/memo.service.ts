@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -31,11 +32,14 @@ export class MemoService {
   }
 
   async getOneByDate(userId: number, date: string) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      throw new BadRequestException('날짜 형식은 YYYY-MM-DD');
+    }
     const memo = await prisma.memos.findUnique({
       where: { userId_date: { userId, date } },
       include: { Feeling: true },
     });
-    if (!memo) throw new NotFoundException('해당 날짜의 메모가 없습니다.');
+    if (!memo) throw new NotFoundException(`${date} 메모 없음`);
     return memo;
   }
 
