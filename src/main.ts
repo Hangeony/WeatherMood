@@ -12,7 +12,7 @@ async function bootstrap() {
 
   app.enableCors({
     // origin: 'http://localhost:5173', // 로컬 개발시 사용
-    origin: 'https://weather-mood-six.vercel.app/', // 실제 프론트 주소로 변경
+    origin: 'https://weather-mood-six.vercel.app', // 실제 프론트 주소로 변경
     // 프론트 주소
     credentials: true, // 쿠키/헤더 등 포함시 필요
   });
