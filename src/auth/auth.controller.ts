@@ -39,7 +39,6 @@ export class AuthController {
   }
 
   @Post('refresh')
-  @UseGuards(AuthGuard)
   async refreshToken(@User('id') userId: number) {
     return this.authService.refreshToken(userId);
   }
