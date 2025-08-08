@@ -7,11 +7,6 @@ import axios from 'axios';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
-// const supabase = createClient(
-//   process.env.SUPABASE_URL!,
-//   process.env.SUPABASE_ANON_KEY!
-// );
-
 @Injectable()
 export class AuthService {
   async register(payload: RegisterDto) {
@@ -26,12 +21,6 @@ export class AuthService {
         errors: { email: '이미 사용 중인 이메일입니다.' },
       });
     }
-
-    // // Supabase에 회원가입
-    // const { data, error } = await supabase.auth.signUp({ email, password });
-    // if (error || !data.user) {
-    //   throw new BadRequestException(error?.message ?? '회원가입 실패');
-    // }
 
     // 도시명 → 위도/경도 조회
     const geoRes = await axios.get(
@@ -142,5 +131,40 @@ export class AuthService {
     });
 
     return { message: '로그아웃 완료' };
+  }
+  async refreshToken(userId: number) {
+    // 사용자 확인
+    if (!userId) {
+      throw new BadRequestException('사용자 ID가 필요합니다.');
+    }
+
+    // 사용자 조회
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new BadRequestException('사용자를 찾을 수 없습니다.');
+    }
+
+    // 계정 확인
+    const account = await prisma.account.findUnique({
+      where: { userId },
+    });
+
+    if (!account || !account.refresh_token) {
+      throw new BadRequestException('로그인이 필요합니다.');
+    }
+
+    // 새로운 토큰 생성
+    const JWTPayload = {
+      id: userId,
+    };
+
+    const newAccessToken = jwt.sign(JWTPayload, process.env.JWT_SECRET!, {
+      expiresIn: '15m',
+    });
+
+    return { accessToken: newAccessToken };
   }
 }

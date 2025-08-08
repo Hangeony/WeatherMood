@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UsePipes,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ZodValidationPipe } from './dto/validation.pipe';
 import { registerSchema, RegisterDto } from './dto/register.dto';
@@ -38,9 +31,16 @@ export class AuthController {
   login(@Body() body: LoginDto) {
     return this.authService.login(body);
   }
+
   @Post('logout')
   @UseGuards(AuthGuard)
   async logout(@User('id') userId: number) {
     return this.authService.logout(userId);
+  }
+
+  @Post('refresh')
+  @UseGuards(AuthGuard)
+  async refreshToken(@User('id') userId: number) {
+    return this.authService.refreshToken(userId);
   }
 }
